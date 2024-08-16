@@ -3,6 +3,8 @@ const socket = new WebSocket('ws://localhost:41200');
 const $ = (selector) => document.querySelector(selector);
 const $start = $('#start');
 const $board = $('#board');
+const $score = $('#score');
+const $players = $('#players');
 let playing = false;
 let me = -1;
 let isHunter = false;
@@ -21,15 +23,16 @@ socket.onmessage = (event) => {
     if (data.type === 'map') {
         if(me !== -1){
             const player = data.data.players.find(player => player.id === me);
+            $score.innerHTML = `${player.score}`;
             if(player.role === 1){
                 isHunter = true;
             }else{
                 isHunter = false;
             }
         }
-        console.log('Map:', data.data);
     }
 
+    $players.innerHTML = data.data.players.length
     printBoard(data.data);
 }
 
@@ -58,11 +61,11 @@ function printBoard(board) {
             const existUser = board.players.find(player => player.x === j && player.y === i);
             if (existUser) {
                 newDiv.style.backgroundImage ='url(./players.png)';
-                newDiv.style.backgroundSize = '250px';
-                const x = (existUser.color * 40) + 1;
-                newDiv.style.backgroundPosition = `-${x}px -8px`;
+                newDiv.style.backgroundSize = '218px';
+                const x = (existUser.color * 40) ;
+                newDiv.style.backgroundPosition = `-${x}px -6px`;
                 if(existUser.role === 1){
-                    const y = (existUser.color * 48);
+                    const y = (existUser.color * 44);
                     newDiv.style.backgroundPosition = `-${x}px -${y}px`;
                 }
             }
